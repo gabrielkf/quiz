@@ -1,16 +1,22 @@
 # Multi Topic Quiz
 
 Gets a multiple choice question from the [Open Trivia Database](https://opentdb.com/api_config.php) from one of the following topics:
+
 -History
+
 -Geography
+
 -Sports
+
 -Politics
+
 -General Knowledge
+
 
 ## Project setup
 
 Download or clone the repository, and in the destination folder, install it:
-Using yarn (recomended):
+Using yarn (recommended):
 
 ```
 yarn install
