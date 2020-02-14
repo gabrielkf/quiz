@@ -3,7 +3,12 @@
     <div class="home">
       <p class="topic-title">Topics</p>
       <div class="card-container">
-        <div class="topic-card" v-for="(topic, key) in topics" :key="key" @click="setTopic(key)">
+        <div
+          class="topic-card"
+          v-for="(topic, key) in topics"
+          :key="key"
+          @click="setTopic(key)"
+        >
           <div class="topic">{{ key }}</div>
         </div>
       </div>
@@ -12,18 +17,26 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Topics',
 
   computed: {
-    topics() {
-      return this.$store.state.topics;
-    }
+    ...mapGetters({
+      topics: 'getAllTopics',
+      completed: 'getCompleted',
+      finished: 'topicCompletion'
+    })
   },
   methods: {
     setTopic(topic) {
       this.$store.commit('setCurrent', topic);
-      this.$router.push('/quiz');
+      if (!this.finished) {
+        this.$router.push('/quiz');
+      } else {
+        this.$router.push('/result');
+      }
     }
   }
 };

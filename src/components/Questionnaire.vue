@@ -1,5 +1,5 @@
 <template>
-  <div class="self-container">
+  <div class="quiz-container">
     <div class="quiz-topic">
       <div class="title">
         <p>{{ topic }}</p>
@@ -11,7 +11,8 @@
     </div>
 
     <div class="box">
-      <Question :key="id" style="margin: auto 0" />
+      <Question v-if="!finished" :key="id" style="margin: auto 0" />
+      <div v-else class="finished">You already completed this Quiz</div>
     </div>
   </div>
 </template>
@@ -32,11 +33,9 @@ export default {
       topic: 'getTopic',
       level: 'getLevel',
       completed: 'getCompleted',
-      id: 'questionID'
-    }),
-    setTitle() {
-      return this.props.title;
-    }
+      id: 'questionID',
+      finished: 'topicCompletion'
+    })
   },
 
   methods: {
@@ -48,7 +47,7 @@ export default {
 </script>
 
 <style>
-.self-container {
+.quiz-container {
   display: flex;
   flex-direction: column;
   align-content: stretch;
@@ -106,5 +105,20 @@ export default {
 
   width: 600px;
   height: 400px;
+}
+
+.finished {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 38px;
+  line-height: 42px;
+  color: rgb(0, 100, 0);
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
 }
 </style>

@@ -1,9 +1,10 @@
 <template>
   <div class="question-container">
-    <div class="question-title">
+    <div v-if="loaded" class="question-title">
       <p>Question {{ completed + 1 }}</p>
       <small class="aside">{{ level }}</small>
     </div>
+    <div v-else class="loading">Loading</div>
     <div class="question" v-html="question"></div>
     <div class="answers-container">
       <div
@@ -28,7 +29,8 @@ export default {
     return {
       question: '',
       options: [],
-      right: null
+      right: null,
+      loaded: false
     };
   },
 
@@ -37,25 +39,25 @@ export default {
       topic: 'getTopic',
       qNumber: 'getQuery',
       level: 'getLevel',
-      completed: 'getCompleted'
+      completed: 'getCompleted',
+      finished: 'topicCompletion'
     })
   },
 
   methods: {
     submitAnswer(answer) {
-      if (this.completed <= 10) {
-        let correct =
-          answer == this.right ? true : false;
-        this.$store.dispatch(
-          'submitAnswer',
-          correct
-        );
-        this.$forceUpdate();
-      } else {
-        this.$route.push('/result');
+      let correct =
+        answer === this.right ? true : false;
+      this.$store.dispatch(
+        'submitAnswer',
+        correct
+      );
+      if (this.finished) {
+        this.$router.push('/result');
       }
     }
   },
+
   mounted(
     qNumber = this.qNumber,
     level = this.level
@@ -74,7 +76,7 @@ export default {
           numOptions * Math.random()
         ); //random id for correct answer
         this.right = sort;
-        console.log(sort);
+        console.log(`option ${sort + 1}`);
 
         let shuffled = [
           {
@@ -104,9 +106,11 @@ export default {
         });
       })
       .catch(error => {
-        // handle error
         console.log(error);
         this.options = ['No question found'];
+      })
+      .finally(() => {
+        this.loaded = true;
       });
   }
 };
@@ -116,7 +120,7 @@ export default {
 .question-container {
   box-sizing: border-box;
   height: 100%;
-  padding: 0;
+  padding: 10px 20px;
   margin: auto 0;
 
   display: flex;
@@ -129,7 +133,7 @@ export default {
   padding: 0;
   margin: auto 10px;
   font-family: Avenir;
-  font-size: 25px;
+  font-size: 24px;
   line-height: 30px;
   text-align: left;
 
@@ -137,6 +141,20 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.loading {
+  height: 100%;
+  font-family: Avenir;
+  font-size: 45px;
+  line-height: 60px;
+  text-align: center;
+  color: rgb(177, 2, 2);
+
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .question {
@@ -152,6 +170,7 @@ export default {
   display: flex;
   flex-direction: column;
   font-size: 15px;
+  letter-spacing: 1px;
 }
 
 .answers-container {

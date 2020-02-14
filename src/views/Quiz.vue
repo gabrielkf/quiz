@@ -1,5 +1,5 @@
 <template>
-  <div class="container quiz">
+  <div class="container">
     <Questionnaire />
   </div>
 </template>
@@ -14,11 +14,11 @@ export default {
     Questionnaire
   },
 
-  data() {
-    return {
-      quizTopic: this.$store.state.current.topic
-    };
-  }
+  computed: {
+    finished() {
+      return this.$store.getters.completion;
+    }
+  },
 };
 </script>
 
